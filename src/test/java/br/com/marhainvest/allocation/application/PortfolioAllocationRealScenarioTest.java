@@ -1,4 +1,4 @@
-package br.com.marhainvest.recommendation.application.allocation.application;
+package br.com.marhainvest.allocation.application;
 
 import br.com.marhainvest.allocation.domain.application.PortfolioAllocationSimulator;
 import br.com.marhainvest.asset.domain.AssetCategory;

@@ -1,4 +1,4 @@
-package br.com.marhainvest.recommendation.application.allocation.application;
+package br.com.marhainvest.allocation.application;
 
 import br.com.marhainvest.allocation.domain.application.PortfolioAllocationSimulator;
 import br.com.marhainvest.asset.domain.AssetCategory;
@@ -91,7 +91,7 @@ class PortfolioAllocationSimulatorIntegrationTest {
                 AssetType.STOCK,
                 AssetCategory.INSURANCE,
                 new BigDecimal("100.00"),
-                null,
+                new BigDecimal("120.00"),
                 new BigDecimal("12.00"),
                 null,
                 null,

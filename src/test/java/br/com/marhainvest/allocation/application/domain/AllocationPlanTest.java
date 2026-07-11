@@ -1,5 +1,6 @@
-package br.com.marhainvest.recommendation.application.allocation.application;
+package br.com.marhainvest.allocation.application.domain;
 
+import br.com.marhainvest.allocation.domain.AllocationDecision;
 import br.com.marhainvest.allocation.domain.AllocationItem;
 import br.com.marhainvest.allocation.domain.AllocationPlan;
 import org.junit.jupiter.api.Test;
@@ -19,13 +20,25 @@ class AllocationPlanTest {
                         "TRXF11",
                         10,
                         new BigDecimal("91.10"),
-                        new BigDecimal("911.00")
+                        new BigDecimal("911.00"),
+                        List.of(
+                                new AllocationDecision(
+                                        10,
+                                        80
+                                )
+                        )
                 ),
                 new AllocationItem(
                         "VGIR11",
                         60,
                         new BigDecimal("9.83"),
-                        new BigDecimal("589.80")
+                        new BigDecimal("589.80"),
+                        List.of(
+                                new AllocationDecision(
+                                        60,
+                                        70
+                                )
+                        )
                 )
         );
 
@@ -50,5 +63,16 @@ class AllocationPlanTest {
 
         assertThat(plan.allocations().getFirst().ticker())
                 .isEqualTo("TRXF11");
+
+        assertThat(plan.allocations().getFirst().decisions())
+                .hasSize(1);
+
+        assertThat(
+                plan.allocations()
+                        .getFirst()
+                        .decisions()
+                        .getFirst()
+                        .score()
+        ).isEqualTo(80);
     }
 }

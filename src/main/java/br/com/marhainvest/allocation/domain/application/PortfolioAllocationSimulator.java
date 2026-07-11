@@ -1,5 +1,6 @@
 package br.com.marhainvest.allocation.domain.application;
 
+import br.com.marhainvest.allocation.domain.AllocationDecision;
 import br.com.marhainvest.allocation.domain.AllocationItem;
 import br.com.marhainvest.allocation.domain.AllocationPlan;
 import br.com.marhainvest.portfolio.domain.Portfolio;
@@ -9,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -70,6 +73,8 @@ public class PortfolioAllocationSimulator {
             remainingMoney =
                     remainingMoney.subtract(price);
 
+            var currentScore = recommendation.score().total();
+
             allocations.compute(
                     ticker,
                     (key, allocation) -> {
@@ -78,11 +83,12 @@ public class PortfolioAllocationSimulator {
                             return new MutableAllocation(
                                     ticker,
                                     1,
-                                    price
+                                    price,
+                                    currentScore
                             );
                         }
 
-                        allocation.increment();
+                        allocation.increment(currentScore);
 
                         return allocation;
                     }
@@ -110,19 +116,44 @@ public class PortfolioAllocationSimulator {
         private final String ticker;
         private int quantity;
         private final BigDecimal unitPrice;
+        private final List<AllocationDecision> decisions =
+                new ArrayList<>();
 
         private MutableAllocation(
                 String ticker,
                 int quantity,
-                BigDecimal unitPrice) {
+                BigDecimal unitPrice,
+                int score) {
 
             this.ticker = ticker;
             this.quantity = quantity;
             this.unitPrice = unitPrice;
+
+            addDecision(score);
         }
 
-        private void increment() {
+        private void increment(int score) {
             quantity++;
+            addDecision(score);
+        }
+
+        private void addDecision(int score) {
+
+            var lastDecision = decisions.isEmpty()
+                    ? null
+                    : decisions.getLast();
+
+            if (lastDecision != null
+                    && lastDecision.score() == score) {
+                return;
+            }
+
+            decisions.add(
+                    new AllocationDecision(
+                            quantity,
+                            score
+                    )
+            );
         }
 
         private AllocationItem toAllocationItem() {
@@ -133,7 +164,8 @@ public class PortfolioAllocationSimulator {
                     unitPrice,
                     unitPrice.multiply(
                             BigDecimal.valueOf(quantity)
-                    )
+                    ),
+                    List.copyOf(decisions)
             );
         }
     }
