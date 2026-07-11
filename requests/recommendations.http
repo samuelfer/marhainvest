@@ -1,0 +1,11 @@
+POST http://localhost:8080/api/v1/recommendations
+Content-Type: application/json
+
+{
+  "availableMoney": 2000,
+  "positions": [
+    {"ticker":"XPLG11","type":"FII","segment":"LOGISTICA","currentPrice":91.61,"targetPrice":100,"dividendYield":10.74,"pvp":0.87,"quantity":80,"averagePrice":95,"targetQuantity":200},
+    {"ticker":"TRXF11","type":"FII","segment":"RENDA_URBANA","currentPrice":91,"targetPrice":95,"dividendYield":12.93,"pvp":0.93,"quantity":22,"averagePrice":90,"targetQuantity":100},
+    {"ticker":"GARE11","type":"FII","segment":"RENDA_URBANA","currentPrice":9.10,"targetPrice":10,"dividendYield":11.50,"pvp":0.95,"quantity":1000,"averagePrice":9,"targetQuantity":1000}
+  ]
+}

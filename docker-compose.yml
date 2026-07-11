@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: marhainvest-postgres
+    environment:
+      POSTGRES_DB: marhainvest
+      POSTGRES_USER: marhainvest
+      POSTGRES_PASSWORD: marhainvest
+    ports:
+      - "5432:5432"
+    volumes:
+      - marhainvest-postgres-data:/var/lib/postgresql/data
+volumes:
+  marhainvest-postgres-data:

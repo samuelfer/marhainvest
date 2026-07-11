@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: marhainvest-api
+  datasource:
+    url: jdbc:postgresql://localhost:5432/marhainvest
+    username: postgres
+    password: postgres
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+server:
+  port: 8080
+brapi:
+  base-url: https://brapi.dev
+  token: tbpWyqdME5BaFT3CRnxMsB
