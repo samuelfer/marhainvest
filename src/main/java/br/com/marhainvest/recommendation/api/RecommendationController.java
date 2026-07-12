@@ -4,25 +4,19 @@ import br.com.marhainvest.portfolio.application.PortfolioLoader;
 import br.com.marhainvest.recommendation.application.RecommendationEngine;
 import br.com.marhainvest.recommendation.domain.Recommendation;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/recommendations")
 public class RecommendationController {
 
  private final RecommendationEngine recommendationEngine;
  private final PortfolioLoader portfolioLoader;
-
- public RecommendationController(
-         RecommendationEngine recommendationEngine,
-         PortfolioLoader portfolioLoader) {
-
-  this.recommendationEngine = recommendationEngine;
-  this.portfolioLoader = portfolioLoader;
- }
 
  @PostMapping
  public ResponseEntity<List<Recommendation>> recommend(
