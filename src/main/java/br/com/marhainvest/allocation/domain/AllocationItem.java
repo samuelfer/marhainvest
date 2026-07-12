@@ -8,6 +8,7 @@ public record AllocationItem(
         int quantity,
         BigDecimal unitPrice,
         BigDecimal totalCost,
-        List<AllocationDecision> decisions
+        List<AllocationDecision> decisions,
+        AllocationExplanation explanation
 ) {
 }

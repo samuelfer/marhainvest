@@ -1,6 +1,7 @@
 package br.com.marhainvest.allocation.application.domain;
 
 import br.com.marhainvest.allocation.domain.AllocationDecision;
+import br.com.marhainvest.allocation.domain.AllocationExplanation;
 import br.com.marhainvest.allocation.domain.AllocationItem;
 import br.com.marhainvest.allocation.domain.AllocationPlan;
 import org.junit.jupiter.api.Test;
@@ -23,9 +24,15 @@ class AllocationPlanTest {
                         new BigDecimal("911.00"),
                         List.of(
                                 new AllocationDecision(
-                                        10,
+                                        1,
                                         80
                                 )
+                        ),
+                        new AllocationExplanation(
+                                80,
+                                80,
+                                new BigDecimal("2000.00"),
+                                "Ativo permaneceu como melhor oportunidade."
                         )
                 ),
                 new AllocationItem(
@@ -35,9 +42,15 @@ class AllocationPlanTest {
                         new BigDecimal("589.80"),
                         List.of(
                                 new AllocationDecision(
-                                        60,
+                                        1,
                                         70
                                 )
+                        ),
+                        new AllocationExplanation(
+                                70,
+                                70,
+                                new BigDecimal("1089.00"),
+                                "Ativo permaneceu como melhor oportunidade."
                         )
                 )
         );
@@ -61,18 +74,38 @@ class AllocationPlanTest {
         assertThat(plan.allocations())
                 .hasSize(2);
 
-        assertThat(plan.allocations().getFirst().ticker())
+        var firstAllocation = plan.allocations()
+                .getFirst();
+
+        assertThat(firstAllocation.ticker())
                 .isEqualTo("TRXF11");
 
-        assertThat(plan.allocations().getFirst().decisions())
+        assertThat(firstAllocation.decisions())
                 .hasSize(1);
 
         assertThat(
-                plan.allocations()
-                        .getFirst()
+                firstAllocation
                         .decisions()
                         .getFirst()
                         .score()
         ).isEqualTo(80);
+
+        assertThat(firstAllocation.explanation())
+                .isNotNull();
+
+        assertThat(firstAllocation.explanation().initialScore())
+                .isEqualTo(80);
+
+        assertThat(firstAllocation.explanation().finalScore())
+                .isEqualTo(80);
+
+        assertThat(
+                firstAllocation
+                        .explanation()
+                        .initialAvailableMoney()
+        ).isEqualByComparingTo("2000.00");
+
+        assertThat(firstAllocation.explanation().reason())
+                .isNotBlank();
     }
 }

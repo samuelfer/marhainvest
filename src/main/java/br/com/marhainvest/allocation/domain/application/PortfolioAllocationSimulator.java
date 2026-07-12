@@ -1,6 +1,7 @@
 package br.com.marhainvest.allocation.domain.application;
 
 import br.com.marhainvest.allocation.domain.AllocationDecision;
+import br.com.marhainvest.allocation.domain.AllocationExplanation;
 import br.com.marhainvest.allocation.domain.AllocationItem;
 import br.com.marhainvest.allocation.domain.AllocationPlan;
 import br.com.marhainvest.portfolio.domain.Portfolio;
@@ -10,9 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +46,6 @@ public class PortfolioAllocationSimulator {
 
             var availableMoney = remainingMoney;
 
-
             var bestOpportunity = recommendations.stream()
                     .filter(recommendation ->
                             recommendation.status()
@@ -63,6 +65,7 @@ public class PortfolioAllocationSimulator {
 
             var ticker = recommendation.ticker();
             var price = recommendation.currentPrice();
+            var currentScore = recommendation.score().total();
 
             simulatedPortfolio =
                     simulatedPortfolio.withPurchase(
@@ -73,8 +76,6 @@ public class PortfolioAllocationSimulator {
             remainingMoney =
                     remainingMoney.subtract(price);
 
-            var currentScore = recommendation.score().total();
-
             allocations.compute(
                     ticker,
                     (key, allocation) -> {
@@ -84,7 +85,8 @@ public class PortfolioAllocationSimulator {
                                     ticker,
                                     1,
                                     price,
-                                    currentScore
+                                    currentScore,
+                                    availableMoney
                             );
                         }
 
@@ -116,6 +118,8 @@ public class PortfolioAllocationSimulator {
         private final String ticker;
         private int quantity;
         private final BigDecimal unitPrice;
+        private final BigDecimal initialAvailableMoney;
+
         private final List<AllocationDecision> decisions =
                 new ArrayList<>();
 
@@ -123,17 +127,21 @@ public class PortfolioAllocationSimulator {
                 String ticker,
                 int quantity,
                 BigDecimal unitPrice,
-                int score) {
+                int score,
+                BigDecimal initialAvailableMoney) {
 
             this.ticker = ticker;
             this.quantity = quantity;
             this.unitPrice = unitPrice;
+            this.initialAvailableMoney = initialAvailableMoney;
 
             addDecision(score);
         }
 
         private void increment(int score) {
+
             quantity++;
+
             addDecision(score);
         }
 
@@ -158,6 +166,24 @@ public class PortfolioAllocationSimulator {
 
         private AllocationItem toAllocationItem() {
 
+            var initialScore = decisions
+                    .getFirst()
+                    .score();
+
+            var finalScore = decisions
+                    .getLast()
+                    .score();
+
+            var explanation = new AllocationExplanation(
+                    initialScore,
+                    finalScore,
+                    initialAvailableMoney,
+                    buildReason(
+                            initialScore,
+                            finalScore
+                    )
+            );
+
             return new AllocationItem(
                     ticker,
                     quantity,
@@ -165,8 +191,55 @@ public class PortfolioAllocationSimulator {
                     unitPrice.multiply(
                             BigDecimal.valueOf(quantity)
                     ),
-                    List.copyOf(decisions)
+                    List.copyOf(decisions),
+                    explanation
             );
+        }
+
+        private String buildReason(
+                int initialScore,
+                int finalScore) {
+
+            if (quantity == 1) {
+                return """
+                        Ativo selecionado como melhor oportunidade compatível \
+                        com o saldo disponível de %s.
+                        """
+                        .formatted(
+                                formatCurrency(initialAvailableMoney)
+                        )
+                        .trim();
+            }
+
+            if (initialScore > finalScore) {
+                return """
+                        Ativo selecionado com %s disponíveis e permaneceu \
+                        como melhor oportunidade durante a simulação, mesmo \
+                        com a redução do score de %d para %d.
+                        """
+                        .formatted(
+                                formatCurrency(initialAvailableMoney),
+                                initialScore,
+                                finalScore
+                        )
+                        .trim();
+            }
+
+            return """
+                    Ativo selecionado com %s disponíveis e permaneceu \
+                    como melhor oportunidade durante %d compras virtuais, \
+                    mantendo score %d.
+                    """
+                    .formatted(
+                            formatCurrency(initialAvailableMoney),
+                            quantity,
+                            initialScore
+                    )
+                    .trim();
+        }
+        private static String formatCurrency( BigDecimal value) {
+            var formatter = NumberFormat.getCurrencyInstance(Locale.of("pt", "BR") );
+            return formatter.format(value);
         }
     }
 }
