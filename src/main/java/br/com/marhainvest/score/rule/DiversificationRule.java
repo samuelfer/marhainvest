@@ -1,8 +1,8 @@
 package br.com.marhainvest.score.rule;
 
 import br.com.marhainvest.portfolio.domain.PortfolioPosition;
-import br.com.marhainvest.score.domain.RecommendationContext;
-import br.com.marhainvest.score.domain.RecommendationRule;
+import br.com.marhainvest.score.domain.context.RecommendationContext;
+import br.com.marhainvest.score.domain.ScoreRule;
 import br.com.marhainvest.score.domain.ScoreItem;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ import java.math.RoundingMode;
 import java.util.Objects;
 
 @Component
-public class DiversificationRule implements RecommendationRule {
+public class DiversificationRule implements ScoreRule {
 
     private static final int MAX_EXPOSURE_POINTS = 20;
 

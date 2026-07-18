@@ -5,7 +5,7 @@ import br.com.marhainvest.recommendation.domain.Recommendation;
 import br.com.marhainvest.recommendation.domain.RecommendationPolicy;
 import br.com.marhainvest.recommendation.domain.RecommendationStatus;
 import br.com.marhainvest.score.application.ScoreCalculator;
-import br.com.marhainvest.score.domain.RecommendationContext;
+import br.com.marhainvest.score.domain.context.RecommendationContext;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -143,4 +143,5 @@ public class RecommendationEngine {
                 })
                 .toList();
     }
+
 }

@@ -7,7 +7,7 @@ import br.com.marhainvest.portfolio.domain.Portfolio;
 import br.com.marhainvest.portfolio.domain.PortfolioPosition;
 import br.com.marhainvest.recommendation.domain.RecommendationStatus;
 import br.com.marhainvest.score.application.ScoreCalculator;
-import br.com.marhainvest.score.domain.RecommendationRule;
+import br.com.marhainvest.score.domain.ScoreRule;
 import br.com.marhainvest.score.rule.DiversificationRule;
 import br.com.marhainvest.score.rule.DividendYieldRule;
 import br.com.marhainvest.score.rule.GoalRule;
@@ -24,7 +24,7 @@ class RecommendationEngineTest {
  @Test
  void shouldRecommendTrxfWhenXplgExceedsFiiExposureLimit() {
 
-  List<RecommendationRule> rules = List.of(
+  List<ScoreRule> rules = List.of(
           new DiversificationRule(),
           new DividendYieldRule(),
           new PvpRule(),

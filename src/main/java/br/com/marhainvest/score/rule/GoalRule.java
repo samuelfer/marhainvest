@@ -1,12 +1,12 @@
 package br.com.marhainvest.score.rule;
 
-import br.com.marhainvest.score.domain.RecommendationContext;
-import br.com.marhainvest.score.domain.RecommendationRule;
+import br.com.marhainvest.score.domain.context.RecommendationContext;
+import br.com.marhainvest.score.domain.ScoreRule;
 import br.com.marhainvest.score.domain.ScoreItem;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GoalRule implements RecommendationRule {
+public class GoalRule implements ScoreRule {
 
  private static final int MAX_POINTS = 20;
 

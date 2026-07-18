@@ -1,14 +1,14 @@
 package br.com.marhainvest.score.rule;
 
 import br.com.marhainvest.asset.domain.AssetType;
-import br.com.marhainvest.score.domain.RecommendationContext;
-import br.com.marhainvest.score.domain.RecommendationRule;
+import br.com.marhainvest.score.domain.context.RecommendationContext;
+import br.com.marhainvest.score.domain.ScoreRule;
 import br.com.marhainvest.score.domain.ScoreItem;
 import br.com.marhainvest.score.domain.ScoreMath;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PvpRule implements RecommendationRule {
+public class PvpRule implements ScoreRule {
 
  private static final int MAX_POINTS = 15;
 

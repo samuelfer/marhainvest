@@ -1,7 +1,7 @@
 package br.com.marhainvest.score.rule;
 
-import br.com.marhainvest.score.domain.RecommendationContext;
-import br.com.marhainvest.score.domain.RecommendationRule;
+import br.com.marhainvest.score.domain.context.RecommendationContext;
+import br.com.marhainvest.score.domain.ScoreRule;
 import br.com.marhainvest.score.domain.ScoreItem;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @Component
-public class TargetPriceRule implements RecommendationRule {
+public class TargetPriceRule implements ScoreRule {
 
     private static final int MAX_POINTS = 25;
     private static final BigDecimal ONE_HUNDRED =

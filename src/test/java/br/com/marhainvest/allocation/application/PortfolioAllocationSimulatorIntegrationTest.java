@@ -10,7 +10,7 @@ import br.com.marhainvest.recommendation.application.RecommendationConstraintEva
 import br.com.marhainvest.recommendation.application.RecommendationEligibility;
 import br.com.marhainvest.recommendation.application.RecommendationEngine;
 import br.com.marhainvest.score.application.ScoreCalculator;
-import br.com.marhainvest.score.domain.RecommendationRule;
+import br.com.marhainvest.score.domain.ScoreRule;
 import br.com.marhainvest.score.rule.GoalRule;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +24,7 @@ class PortfolioAllocationSimulatorIntegrationTest {
     @Test
     void shouldRecalculateRankingAfterEachVirtualPurchase() {
 
-        List<RecommendationRule> rules = List.of(
+        List<ScoreRule> rules = List.of(
                 new GoalRule()
         );
 

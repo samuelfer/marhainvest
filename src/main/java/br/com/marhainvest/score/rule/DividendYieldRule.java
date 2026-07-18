@@ -1,14 +1,14 @@
 package br.com.marhainvest.score.rule;
 
-import br.com.marhainvest.score.domain.RecommendationContext;
-import br.com.marhainvest.score.domain.RecommendationRule;
+import br.com.marhainvest.score.domain.context.RecommendationContext;
+import br.com.marhainvest.score.domain.ScoreRule;
 import br.com.marhainvest.score.domain.ScoreItem;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
 @Component
-public class DividendYieldRule implements RecommendationRule {
+public class DividendYieldRule implements ScoreRule {
 
  private static final BigDecimal MINIMUM_DIVIDEND_YIELD =
          BigDecimal.valueOf(10);

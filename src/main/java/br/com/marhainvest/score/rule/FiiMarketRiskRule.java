@@ -1,8 +1,8 @@
 package br.com.marhainvest.score.rule;
 
 import br.com.marhainvest.asset.domain.AssetType;
-import br.com.marhainvest.score.domain.RecommendationContext;
-import br.com.marhainvest.score.domain.RecommendationRule;
+import br.com.marhainvest.score.domain.context.RecommendationContext;
+import br.com.marhainvest.score.domain.ScoreRule;
 import br.com.marhainvest.score.domain.ScoreItem;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,7 @@ import java.math.BigDecimal;
  * ✓ recorrência do resultado
  */
 @Component
-public class FiiMarketRiskRule implements RecommendationRule {
+public class FiiMarketRiskRule implements ScoreRule {
 
     @Override
     public ScoreItem evaluate(
