@@ -21,7 +21,6 @@ public class OpportunityController {
     @GetMapping
     public List<OpportunityResponse> findAll(
             @RequestParam(required = false) AssetType assetType) {
-//        System.out.println("Oportunidades encontradas para o tipo de ativo: " + assetType);
         return service.findAll(assetType);
     }
 

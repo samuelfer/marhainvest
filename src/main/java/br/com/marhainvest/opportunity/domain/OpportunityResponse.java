@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 
 public record OpportunityResponse(
         String ticker,
+        String category,
         AssetType assetType,
         BigDecimal currentPrice,
         BigDecimal targetPrice,

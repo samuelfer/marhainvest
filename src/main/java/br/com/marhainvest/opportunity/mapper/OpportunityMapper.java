@@ -16,6 +16,8 @@ public class OpportunityMapper {
 
                 snapshot.ticker(),
 
+                snapshot.category().name(),
+
                 snapshot.type(),
 
                 snapshot.currentPrice(),

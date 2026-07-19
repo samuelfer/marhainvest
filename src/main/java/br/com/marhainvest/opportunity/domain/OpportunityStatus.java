@@ -10,5 +10,5 @@ public enum OpportunityStatus {
 
     LOW_SCORE,
 
-    OUTSIDE_STRATEGY
+    APPROVED, OUTSIDE_STRATEGY
 }
