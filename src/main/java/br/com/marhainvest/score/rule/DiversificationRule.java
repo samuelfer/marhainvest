@@ -4,6 +4,7 @@ import br.com.marhainvest.portfolio.domain.PortfolioPosition;
 import br.com.marhainvest.score.domain.context.RecommendationContext;
 import br.com.marhainvest.score.domain.ScoreRule;
 import br.com.marhainvest.score.domain.ScoreItem;
+import br.com.marhainvest.score.domain.context.ScoreContext;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -17,9 +18,16 @@ public class DiversificationRule implements ScoreRule {
 
     @Override
     public ScoreItem evaluate(
-            RecommendationContext context) {
+            ScoreContext context) {
 
-        var asset = context.position().asset();
+        if (!(context instanceof RecommendationContext recommendation)) {
+            return ScoreItem.zero(
+                    "DIVERSIFICATION",
+                    "Regra disponível apenas para recomendações."
+            );
+        }
+
+        var asset = context.asset();
 
         var assetType = asset.type();
         var category = asset.category();
@@ -32,7 +40,7 @@ public class DiversificationRule implements ScoreRule {
             );
         }
 
-        var comparablePositions = context.portfolio()
+        var comparablePositions = ((RecommendationContext) context).portfolio()
                 .positions()
                 .stream()
                 .filter(position ->
@@ -59,10 +67,10 @@ public class DiversificationRule implements ScoreRule {
         var categoryPositions = comparablePositions
                 .stream()
                 .filter(position ->
-                    Objects.equals(
-                        position.asset().category(),
-                        category
-                    )
+                        Objects.equals(
+                                position.asset().category(),
+                                category
+                        )
                 )
                 .filter(position -> position.quantity() > 0)
                 .toList();

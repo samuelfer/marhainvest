@@ -27,9 +27,7 @@ public class PortfolioController {
     }
 
     @GetMapping("/{id}")
-    public Portfolio findById(
-            @PathVariable Long id) {
-
+    public Portfolio findById(@PathVariable Long id) {
         return portfolioLoader.load(id);
     }
 }

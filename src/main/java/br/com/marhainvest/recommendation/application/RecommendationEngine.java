@@ -49,13 +49,9 @@ public class RecommendationEngine {
                 )
                 .map(position -> {
 
-                    var context = new RecommendationContext(
-                            portfolio,
-                            position,
-                            money
-                    );
 
-                    var score = scoreCalculator.calculate(context);
+                    var score = scoreCalculator.calculate(new RecommendationContext(
+                            portfolio, position, money));
 
                     int suggestedQuantity = money
                             .divide(
@@ -94,6 +90,7 @@ public class RecommendationEngine {
                     return new Recommendation(
                             null,
                             position.asset().ticker(),
+                            position.asset().type(),
                             constraint.status(),
                             position.asset().currentPrice(),
                             allowedQuantity,
@@ -133,6 +130,7 @@ public class RecommendationEngine {
                     return new Recommendation(
                             ranking,
                             recommendation.ticker(),
+                            recommendation.assetType(),
                             recommendation.status(),
                             recommendation.currentPrice(),
                             recommendation.suggestedQuantity(),

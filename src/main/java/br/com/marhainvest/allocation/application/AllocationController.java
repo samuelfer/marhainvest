@@ -1,4 +1,4 @@
-package br.com.marhainvest.allocation.domain.application;
+package br.com.marhainvest.allocation.application;
 
 import br.com.marhainvest.allocation.domain.AllocationPlan;
 import br.com.marhainvest.portfolio.application.PortfolioLoader;
@@ -13,20 +13,11 @@ import java.math.BigDecimal;
 public class AllocationController {
 
     private final PortfolioLoader portfolioLoader;
-    private final PortfolioAllocationSimulator simulator;
+    private final br.com.marhainvest.allocation.domain.application.PortfolioAllocationSimulator simulator;
 
     @PostMapping("/simulate")
-    public AllocationPlan simulate(
-            @RequestParam Long portfolioId,
-            @RequestParam BigDecimal money) {
-
-        var portfolio = portfolioLoader.load(
-                portfolioId
-        );
-
-        return simulator.simulate(
-                portfolio,
-                money
-        );
+    public AllocationPlan simulate(@RequestParam Long portfolioId, @RequestParam BigDecimal money) {
+        var portfolio = portfolioLoader.load(portfolioId);
+        return simulator.simulate(portfolio, money);
     }
 }

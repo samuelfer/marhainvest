@@ -1,15 +1,15 @@
 package br.com.marhainvest.score.rule;
 
 import br.com.marhainvest.asset.domain.AssetType;
-import br.com.marhainvest.score.domain.context.RecommendationContext;
-import br.com.marhainvest.score.domain.ScoreRule;
 import br.com.marhainvest.score.domain.ScoreItem;
+import br.com.marhainvest.score.domain.ScoreRule;
+import br.com.marhainvest.score.domain.context.ScoreContext;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
 /**
- * Essa class deverah evoluir para ver
+ * Essa classe deverá evoluir para verificar:
  * ✓ estabilidade dos dividendos em 12/24 meses
  * ✓ queda recente dos dividendos
  * ✓ dividendos extraordinários
@@ -24,10 +24,9 @@ import java.math.BigDecimal;
 public class FiiMarketRiskRule implements ScoreRule {
 
     @Override
-    public ScoreItem evaluate(
-            RecommendationContext context) {
+    public ScoreItem evaluate(ScoreContext context) {
 
-        var asset = context.position().asset();
+        var asset = context.asset();
 
         if (asset.type() != AssetType.FII) {
             return new ScoreItem(
@@ -48,49 +47,30 @@ public class FiiMarketRiskRule implements ScoreRule {
             );
         }
 
-        if (dy.compareTo(
-                BigDecimal.valueOf(20)
-        ) >= 0) {
-
-            return risk(
-                    -20,
-                    dy,
-                    pvp,
-                    "DY extremamente elevado"
-            );
+        if (dy.compareTo(BigDecimal.valueOf(20)) >= 0) {
+            return risk(-20, dy, pvp,
+                    "DY extremamente elevado");
         }
 
         if (dy.compareTo(BigDecimal.valueOf(16)) >= 0
                 && pvp.compareTo(BigDecimal.valueOf(0.70)) <= 0) {
 
-            return risk(
-                    -15,
-                    dy,
-                    pvp,
-                    "DY elevado combinado com forte desconto patrimonial"
-            );
+            return risk(-15, dy, pvp,
+                    "DY elevado combinado com forte desconto patrimonial");
         }
 
         if (dy.compareTo(BigDecimal.valueOf(14)) >= 0
                 && pvp.compareTo(BigDecimal.valueOf(0.80)) <= 0) {
 
-            return risk(
-                    -10,
-                    dy,
-                    pvp,
-                    "DY elevado combinado com desconto patrimonial"
-            );
+            return risk(-10, dy, pvp,
+                    "DY elevado combinado com desconto patrimonial");
         }
 
         if (dy.compareTo(BigDecimal.valueOf(12)) >= 0
                 && pvp.compareTo(BigDecimal.valueOf(0.70)) <= 0) {
 
-            return risk(
-                    -5,
-                    dy,
-                    pvp,
-                    "Desconto patrimonial relevante exige atenção"
-            );
+            return risk(-5, dy, pvp,
+                    "Desconto patrimonial relevante exige atenção");
         }
 
         return new ScoreItem(
@@ -110,11 +90,7 @@ public class FiiMarketRiskRule implements ScoreRule {
                 "FII_RISK",
                 points,
                 "%s. DY de %s%% e P/VP de %s"
-                        .formatted(
-                                reason,
-                                dy,
-                                pvp
-                        )
+                        .formatted(reason, dy, pvp)
         );
     }
 }

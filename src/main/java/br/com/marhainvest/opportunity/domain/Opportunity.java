@@ -1,4 +1,4 @@
-package br.com.marhainvest.opportunity.application.domain;
+package br.com.marhainvest.opportunity.domain;
 
 public class Opportunity {
 }

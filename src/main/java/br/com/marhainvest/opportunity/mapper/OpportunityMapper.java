@@ -1,6 +1,7 @@
 package br.com.marhainvest.opportunity.mapper;
 
 import br.com.marhainvest.asset.domain.AssetSnapshot;
+import br.com.marhainvest.opportunity.domain.OpportunityEvaluation;
 import br.com.marhainvest.opportunity.domain.OpportunityResponse;
 import br.com.marhainvest.score.domain.Score;
 import org.springframework.stereotype.Component;
@@ -9,8 +10,7 @@ import org.springframework.stereotype.Component;
 public class OpportunityMapper {
 
     public OpportunityResponse toResponse(
-            AssetSnapshot snapshot,
-            Score score) {
+            AssetSnapshot snapshot, OpportunityEvaluation evaluation) {
 
         return new OpportunityResponse(
 
@@ -25,8 +25,9 @@ public class OpportunityMapper {
                 snapshot.dividendYield(),
 
                 snapshot.pvp(),
-
-                score
+                evaluation.status(),
+                evaluation.reason(),
+                evaluation.score()
 
         );
     }

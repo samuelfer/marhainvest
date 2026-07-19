@@ -17,13 +17,14 @@ public interface AssetMarketDataRepository
     @Query("""
         select amd
         from AssetMarketDataEntity amd
+        join fetch amd.asset a
         where amd.referenceDate = (
             select max(m.referenceDate)
             from AssetMarketDataEntity m
             where m.asset = amd.asset
         )
-        and (:type is null or amd.asset.assetType = :type)
-        order by amd.asset.ticker
+        and (:type is null or a.assetType = :type)
+        order by a.ticker
         """)
     List<AssetMarketDataEntity> findLatestByType(
             @Param("type") AssetType type);

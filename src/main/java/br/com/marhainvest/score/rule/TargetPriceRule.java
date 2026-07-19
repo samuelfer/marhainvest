@@ -1,8 +1,8 @@
 package br.com.marhainvest.score.rule;
 
-import br.com.marhainvest.score.domain.context.RecommendationContext;
-import br.com.marhainvest.score.domain.ScoreRule;
 import br.com.marhainvest.score.domain.ScoreItem;
+import br.com.marhainvest.score.domain.ScoreRule;
+import br.com.marhainvest.score.domain.context.ScoreContext;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -12,14 +12,14 @@ import java.math.RoundingMode;
 public class TargetPriceRule implements ScoreRule {
 
     private static final int MAX_POINTS = 25;
+
     private static final BigDecimal ONE_HUNDRED =
             BigDecimal.valueOf(100);
 
     @Override
-    public ScoreItem evaluate(
-            RecommendationContext context) {
+    public ScoreItem evaluate(ScoreContext context) {
 
-        var asset = context.position().asset();
+        var asset = context.asset();
 
         var currentPrice = asset.currentPrice();
         var targetPrice = asset.targetPrice();
@@ -46,6 +46,7 @@ public class TargetPriceRule implements ScoreRule {
                 .multiply(ONE_HUNDRED);
 
         if (safetyMargin.signum() <= 0) {
+
             return new ScoreItem(
                     "TARGET_PRICE",
                     0,
@@ -73,10 +74,10 @@ public class TargetPriceRule implements ScoreRule {
         return new ScoreItem(
                 "TARGET_PRICE",
                 points,
-                (
-                        "Margem de segurança de %s%%. "
-                                + "Cotação R$ %s e preço-teto R$ %s"
-                ).formatted(
+                """
+                Margem de segurança de %s%%.
+                Cotação R$ %s e preço-teto R$ %s
+                """.formatted(
                         safetyMargin.setScale(
                                 2,
                                 RoundingMode.HALF_UP
@@ -89,7 +90,7 @@ public class TargetPriceRule implements ScoreRule {
                                 2,
                                 RoundingMode.HALF_UP
                         )
-                )
+                ).replace("\n", " ")
         );
     }
 }

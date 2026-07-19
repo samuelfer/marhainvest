@@ -4,6 +4,7 @@ import br.com.marhainvest.score.domain.ScoreRule;
 import br.com.marhainvest.score.domain.Score;
 import br.com.marhainvest.score.domain.context.RecommendationContext;
 import br.com.marhainvest.score.domain.ScoreItem;
+import br.com.marhainvest.score.domain.context.ScoreContext;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class ScoreCalculator {
   this.ratingCalculator = ratingCalculator;
  }
 
- public Score calculate(RecommendationContext context) {
+ public Score calculate(ScoreContext context) {
 
   List<ScoreItem> items = rules.stream()
           .map(rule -> rule.evaluate(context))
