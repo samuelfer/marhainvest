@@ -10,11 +10,13 @@ import br.com.marhainvest.recommendation.application.RecommendationConstraintEva
 import br.com.marhainvest.recommendation.application.RecommendationEligibility;
 import br.com.marhainvest.recommendation.application.RecommendationEngine;
 import br.com.marhainvest.score.application.ScoreCalculator;
+import br.com.marhainvest.score.application.ScoreRatingCalculator;
 import br.com.marhainvest.score.domain.ScoreRule;
 import br.com.marhainvest.score.rule.*;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,16 +34,18 @@ class PortfolioAllocationRealScenarioTest {
                 new PvpRule(),
                 new TargetPriceRule()
         );
+        var scoreCalculator = new ScoreCalculator(
+                rules,
+                new ScoreRatingCalculator()
+        );
 
         var engine = new RecommendationEngine(
-                new ScoreCalculator(rules),
+                scoreCalculator,
                 new RecommendationEligibility(),
                 new RecommendationConstraintEvaluator()
         );
 
-        var simulator = new PortfolioAllocationSimulator(
-                engine
-        );
+        var simulator = new PortfolioAllocationSimulator(engine);
 
         var portfolio = new Portfolio(
                 List.of(
@@ -122,20 +126,16 @@ class PortfolioAllocationRealScenarioTest {
         assertThat(result.initialMoney())
                 .isEqualByComparingTo("2000.00");
 
-        assertThat(result.investedAmount())
-                .isPositive();
+        assertThat(result.investedAmount()).isPositive();
 
         assertThat(result.investedAmount())
-                .isLessThanOrEqualTo(
-                        new BigDecimal("2000.00")
-                );
+                .isLessThanOrEqualTo(new BigDecimal("2000.00"));
 
         assertThat(result.remainingMoney())
                 .isGreaterThanOrEqualTo(BigDecimal.ZERO);
 
         assertThat(
-                result.investedAmount()
-                        .add(result.remainingMoney())
+                result.investedAmount().add(result.remainingMoney())
         ).isEqualByComparingTo("2000.00");
 
         assertThat(result.allocations())
@@ -150,11 +150,7 @@ class PortfolioAllocationRealScenarioTest {
                     assertThat(allocation.totalCost())
                             .isEqualByComparingTo(
                                     allocation.unitPrice()
-                                            .multiply(
-                                                    BigDecimal.valueOf(
-                                                            allocation.quantity()
-                                                    )
-                                            )
+                                            .multiply(BigDecimal.valueOf(allocation.quantity()))
                             );
                 });
 
@@ -184,14 +180,22 @@ class PortfolioAllocationRealScenarioTest {
             int quantity,
             Integer targetQuantity) {
 
+        BigDecimal current = new BigDecimal(currentPrice);
+
+        BigDecimal patrimonialValuePerShare = current.divide(
+                new BigDecimal(pvp),
+                4,
+                RoundingMode.HALF_UP
+        );
+
         var asset = new AssetSnapshot(
                 ticker,
                 AssetType.FII,
                 category,
-                new BigDecimal(currentPrice),
+                current,
                 new BigDecimal(targetPrice),
                 new BigDecimal(dividendYield),
-                new BigDecimal(pvp),
+                patrimonialValuePerShare,
                 null,
                 null,
                 new BigDecimal(dpa)
@@ -200,7 +204,7 @@ class PortfolioAllocationRealScenarioTest {
         return new PortfolioPosition(
                 asset,
                 quantity,
-                new BigDecimal(currentPrice),
+                current,
                 targetQuantity
         );
     }

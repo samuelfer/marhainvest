@@ -10,6 +10,7 @@ import br.com.marhainvest.recommendation.application.RecommendationConstraintEva
 import br.com.marhainvest.recommendation.application.RecommendationEligibility;
 import br.com.marhainvest.recommendation.application.RecommendationEngine;
 import br.com.marhainvest.score.application.ScoreCalculator;
+import br.com.marhainvest.score.application.ScoreRatingCalculator;
 import br.com.marhainvest.score.domain.ScoreRule;
 import br.com.marhainvest.score.rule.GoalRule;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,10 @@ class PortfolioAllocationSimulatorIntegrationTest {
                 new GoalRule()
         );
 
-        var scoreCalculator = new ScoreCalculator(rules);
+        var scoreCalculator = new ScoreCalculator(
+                rules,
+                new ScoreRatingCalculator()
+        );
 
         var recommendationEngine = new RecommendationEngine(
                 scoreCalculator,
@@ -90,13 +94,13 @@ class PortfolioAllocationSimulatorIntegrationTest {
                 ticker,
                 AssetType.STOCK,
                 AssetCategory.INSURANCE,
-                new BigDecimal("100.00"),
-                new BigDecimal("120.00"),
-                new BigDecimal("12.00"),
-                null,
-                null,
-                null,
-                null
+                new BigDecimal("100.00"), // preço atual
+                new BigDecimal("120.00"), // preço teto
+                new BigDecimal("12.00"),  // dividend yield
+                new BigDecimal("100.00"), // valor patrimonial por cota (P/VP = 1)
+                null,                     // ROE
+                null,                     // payout
+                null                      // DPA
         );
 
         return new PortfolioPosition(

@@ -2,7 +2,6 @@ package br.com.marhainvest.score.application;
 
 import br.com.marhainvest.score.domain.ScoreRule;
 import br.com.marhainvest.score.domain.Score;
-import br.com.marhainvest.score.domain.context.RecommendationContext;
 import br.com.marhainvest.score.domain.ScoreItem;
 import br.com.marhainvest.score.domain.context.ScoreContext;
 import org.springframework.stereotype.Service;

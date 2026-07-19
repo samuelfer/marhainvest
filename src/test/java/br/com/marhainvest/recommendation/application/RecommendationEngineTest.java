@@ -7,6 +7,7 @@ import br.com.marhainvest.portfolio.domain.Portfolio;
 import br.com.marhainvest.portfolio.domain.PortfolioPosition;
 import br.com.marhainvest.recommendation.domain.RecommendationStatus;
 import br.com.marhainvest.score.application.ScoreCalculator;
+import br.com.marhainvest.score.application.ScoreRatingCalculator;
 import br.com.marhainvest.score.domain.ScoreRule;
 import br.com.marhainvest.score.rule.DiversificationRule;
 import br.com.marhainvest.score.rule.DividendYieldRule;
@@ -31,8 +32,13 @@ class RecommendationEngineTest {
           new GoalRule()
   );
 
+  var scoreCalculator = new ScoreCalculator(
+          rules,
+          new ScoreRatingCalculator()
+  );
+
   var engine = new RecommendationEngine(
-          new ScoreCalculator(rules),
+          scoreCalculator,
           new RecommendationEligibility(),
           new RecommendationConstraintEvaluator()
   );
